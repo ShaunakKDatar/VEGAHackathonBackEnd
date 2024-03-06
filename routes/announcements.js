@@ -35,6 +35,7 @@ router.post("/", auth, async (req, res) => {
     const announcement = new Announcement({
       title: req.body.title,
       description: req.body.description,
+      date: req.body.date,
     });
 
     // Save the announcement to the database

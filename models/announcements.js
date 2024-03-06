@@ -9,6 +9,11 @@ const announcementSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
