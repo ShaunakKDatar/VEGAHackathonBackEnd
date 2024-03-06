@@ -19,6 +19,17 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    // Fetch all student objects from the database
+    const students = await StudentUser.find().select("-password");
+    res.send(students);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).send("An unexpected error occurred.");
+  }
+});
+
 // Route to Create a New User
 router.post("/", async (req, res) => {
   try {
@@ -47,6 +58,7 @@ router.post("/", async (req, res) => {
         "password",
         "isStudent",
         "college",
+        "skills",
       ])
     );
 
