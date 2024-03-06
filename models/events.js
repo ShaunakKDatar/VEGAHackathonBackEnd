@@ -6,22 +6,13 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  day: {
-    type: Number,
+  startDate: {
+    type: Date,
     required: true,
-    min: 1,
-    max: 31,
+    default: Date.now,
   },
-  month: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 12,
-  },
-  year: {
-    type: Number,
-    required: true,
-    min: 1,
+  endDate: {
+    type: Date,
   },
   description: {
     type: String,
@@ -55,9 +46,8 @@ function validateEvent(event) {
   const schema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().max(1000),
-    day: Joi.number().integer().min(1).max(31).required(),
-    month: Joi.number().integer().min(1).max(12).required(),
-    year: Joi.number().integer().min(1).required(),
+    startDate: Joi.date().required(),
+    endDate: Joi.date(),
     startTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/), // Matches HH:MM format (24-hour)
     endTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/), // Matches HH:MM format (24-hour)
   });

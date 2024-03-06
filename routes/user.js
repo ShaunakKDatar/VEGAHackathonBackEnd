@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
+const { User, validate } = require("../models/user");
 
 // Login route
 router.post("/login", async (req, res) => {
@@ -39,13 +39,41 @@ router.post("/login", async (req, res) => {
 // Signup route
 router.post("/signup", async (req, res) => {
   try {
+    // Validate the user data
+    const { error } = validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
     // Get the signup data from the request body
-    console.log(req.body);
-    const { name, email, password, college } = req.body;
-    console.log(req.body);
+    const {
+      username,
+      email,
+      password,
+      college,
+      isStudent,
+      isTPO,
+      isCompany,
+      isAlumni,
+    } = req.body;
+
+    // Check if the user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "User already registered" });
+    }
 
     // Create a new user
-    const user = new User({ username: name, email, password, college });
+    user = new User({
+      username,
+      email,
+      password,
+      college,
+      isStudent,
+      isTPO,
+      isCompany,
+      isAlumni,
+    });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
@@ -53,8 +81,19 @@ router.post("/signup", async (req, res) => {
     await user.save();
 
     // Generate a JWT token for authentication
-    const token = user.generateAuthToken();
-    res.header("X-auth-token", token).send(_.pick(user, ["name", "email"]));
+    const token = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+        isStudent: user.isStudent,
+        isTPO: user.isTPO,
+        isCompany: user.isCompany,
+        isAlumni: user.isAlumni,
+        email: user.email,
+        college: user.college,
+      },
+      "secret_ecom"
+    );
 
     // Return the token as response
     res.json({ success: true, token });

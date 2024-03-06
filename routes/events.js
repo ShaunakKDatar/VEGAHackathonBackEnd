@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Event, validate } = require("../models/events");
+const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
   try {
@@ -12,17 +13,31 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
+    if (!req.user.isTPO) {
+      return res.status(403).send("Access Denied. Only TPO can create events.");
+    }
+
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+
+    // Check if a similar event already exists
+    const existingEvent = await Event.findOne({
+      title: req.body.title,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+    });
+
+    if (existingEvent) {
+      return res.status(400).send("A similar event already exists.");
+    }
 
     const event = new Event({
       title: req.body.title,
       description: req.body.description,
-      day: req.body.day,
-      month: req.body.month,
-      year: req.body.year,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
     });
@@ -42,21 +57,30 @@ router.put("/:id", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const event = Events.findByIdAndUpdate(
-      req.params.id,
-      {
-        title: req.body.title,
-        description: req.body.description,
-        day: req.body.day,
-        month: req.body.month,
-        year: req.body.year,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-      },
-      { new: true }
-    );
+    const event = await Event.findById(req.params.id);
     if (!event)
       return res.status(404).send("The event with the given ID was not found.");
+
+    // Check if a similar event already exists
+    const existingEvent = await Event.findOne({
+      title: req.body.title,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      _id: { $ne: req.params.id }, // Exclude the current event from the search
+    });
+
+    if (existingEvent) {
+      return res.status(400).send("A similar event already exists.");
+    }
+
+    event.title = req.body.title;
+    event.description = req.body.description;
+    event.startDate = req.body.startDate;
+    event.endDate = req.body.endDate;
+    event.startTime = req.body.startTime;
+    event.endTime = req.body.endTime;
+
+    await event.save();
     res.send(event);
   } catch (ex) {
     // If an error occurs during the process, handle it

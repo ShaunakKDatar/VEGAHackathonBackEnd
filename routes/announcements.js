@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 const {
   Announcement,
   validateAnnouncement,
-} = require("../models/announcement");
+} = require("../models/announcements");
 
 // Get all announcements
 router.get("/", async (req, res) => {
@@ -17,17 +18,29 @@ router.get("/", async (req, res) => {
 });
 
 // Create a new announcement
-router.post("/", async (req, res) => {
-  // Validate the request body
-  const { error } = validateAnnouncement(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
+router.post("/", auth, async (req, res) => {
   try {
+    // Check if the authenticated user is a TPO
+    if (!req.user.isTPO) {
+      return res
+        .status(403)
+        .send("Access Denied. Only TPO can create announcements.");
+    }
+
+    // Validate the request body
+    const { error } = validateAnnouncement(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // Create the announcement
     const announcement = new Announcement({
       title: req.body.title,
-      description: req.body.description, // Add description field
+      description: req.body.description,
     });
+
+    // Save the announcement to the database
     await announcement.save();
+
+    // Return the created announcement
     res.send(announcement);
   } catch (error) {
     console.error("Error creating announcement:", error);
