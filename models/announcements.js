@@ -11,7 +11,6 @@ const announcementSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: true,
     default: Date.now,
   },
 });
@@ -22,6 +21,7 @@ function validateAnnouncement(announcement) {
   const schema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string(),
+    date: Joi.date(),
   });
 
   return schema.validate(announcement);
