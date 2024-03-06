@@ -5,9 +5,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    role: {
-        type: String,
-        required: true
+    isStudent:{
+        type:Boolean,
+        require:false
+    },
+    isTPO:{
+        type:Boolean,
+        require:false
+    },
+    isCompany:{
+        type:Boolean,
+        require:false
+    },
+    isAlumni:{
+        type:Boolean,
+        require:false,
     },
     password: {
         type: String,

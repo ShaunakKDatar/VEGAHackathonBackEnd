@@ -37,11 +37,11 @@ router.post('/signup', async (req, res) => {
     try {
         // Get the signup data from the request body
         console.log(req.body);
-        const { name, email, password, college, role } = req.body;
+        const { name, email, password, college } = req.body;
         console.log(req.body);
 
         // Create a new user
-        const user = new User({ username:name, email, password, college, role });
+        const user = new User({ username:name, email, password, college });
 
         // Save the user to the database
         await user.save();
@@ -74,7 +74,7 @@ router.post('/dummy', async (req, res) => {
         const role =  "student";
 
         // Create a new dummy user
-        const dummyUser = new User({ username:name, email, password, college, role });
+        const dummyUser = new User({ username:name, email, password, college });
 
         // Save the dummy user to the database
         await dummyUser.save();
