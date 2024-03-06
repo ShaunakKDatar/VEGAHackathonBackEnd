@@ -10,6 +10,7 @@ const company = require("./routes/company");
 const auth = require("./routes/auth");
 const interviewQuestion = require("./routes/interviewQuestion");
 const resources = require("./routes/resources");
+const opportunity = require("./routes/opportunity");
 
 app.use(express.json());
 app.use(cors());
@@ -24,6 +25,7 @@ app.use("/api/auth", auth);
 app.use("/api/company", company);
 app.use("/api/resources", resources);
 app.use("/api/interviewQuestions", interviewQuestion);
+app.use("/api/opportunity", opportunity);
 
 const port = process.env.PORT || 3000;
 app.listen(port, (err) => {

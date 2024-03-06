@@ -38,6 +38,11 @@ const eventSchema = mongoose.Schema({
         `${props.value} is not a valid end time! Please use HH:MM format.`,
     },
   },
+  studentUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "StudentUsers",
+    required: true,
+  },
 });
 
 const Event = new mongoose.model("Event", eventSchema);
@@ -49,7 +54,8 @@ function validateEvent(event) {
     startDate: Joi.date().required(),
     endDate: Joi.date(),
     startTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/), // Matches HH:MM format (24-hour)
-    endTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/), // Matches HH:MM format (24-hour)
+    endTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/),
+    studentUserId: Joi.string().required(), // Matches HH:MM format (24-hour)
   });
 
   return schema.validate(event);

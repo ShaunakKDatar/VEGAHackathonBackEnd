@@ -27,6 +27,7 @@ router.post("/", auth, async (req, res) => {
       title: req.body.title,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
+      studentUserId: req.body.studentUserId,
     });
 
     if (existingEvent) {
@@ -40,6 +41,7 @@ router.post("/", auth, async (req, res) => {
       endDate: req.body.endDate,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
+      studentUserId: req.body.studentUserId,
     });
 
     await event.save();
@@ -64,9 +66,12 @@ router.put("/:id", async (req, res) => {
     // Check if a similar event already exists
     const existingEvent = await Event.findOne({
       title: req.body.title,
+      description: req.body.description,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      _id: { $ne: req.params.id }, // Exclude the current event from the search
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      studentUserId: req.body.studentUserId,
     });
 
     if (existingEvent) {
