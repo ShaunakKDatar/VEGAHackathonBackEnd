@@ -23,6 +23,10 @@ const studentUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  skills: {
+    type: [String],
+    default: [],
+  },
 });
 
 // Method to generate auth token
@@ -49,6 +53,7 @@ function validateStudentUser(user) {
     isStudent: Joi.boolean(),
     email: Joi.string().email().required(),
     college: Joi.string().required(),
+    skills: Joi.array().items(Joi.string()),
   });
 
   return schema.validate(user);

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const studentUser = require("./routes/studentUser");
 const tpoUser = require("./routes/tpoUser");
 const alumniUser = require("./routes/alumniUser");
@@ -9,6 +10,7 @@ const company = require("./routes/company");
 const auth = require("./routes/auth");
 
 app.use(express.json());
+app.use(cors());
 
 require("./startup/db")();
 app.use("/api/student", studentUser);

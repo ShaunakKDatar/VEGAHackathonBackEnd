@@ -47,6 +47,7 @@ router.post("/", async (req, res) => {
         "password",
         "isStudent",
         "college",
+        "skills",
       ])
     );
 
