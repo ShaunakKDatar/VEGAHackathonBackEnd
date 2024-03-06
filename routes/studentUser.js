@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
     await user.save();
 
     // Generate an authentication token
-    const token = user.getAuthToken();
+    const token = user.generateAuthToken();
 
     // Send the token in the response header along with selected user details
     res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));
