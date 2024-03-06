@@ -28,7 +28,7 @@ router.post("/", auth, async (req, res) => {
       category: req.body.category,
       link: req.body.link,
       postedBy: req.user._id,
-      tags: req.body.tags, // Use the user's ID from the token
+      tags: req.body.tags,
     });
 
     // Save the new resource to the database

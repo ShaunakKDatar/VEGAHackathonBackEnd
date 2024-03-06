@@ -34,10 +34,7 @@ studentUserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
       id: this._id,
-      username: this.username,
       isStudent: this.isStudent,
-      email: this.email,
-      college: this.college,
     },
     "secret_ecom"
   );
