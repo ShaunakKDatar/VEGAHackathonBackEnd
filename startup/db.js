@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 module.exports = function () {
-  mongoose.connect("").then(() => {
+  mongoose.connect("mongodb+srv://4chan:FgHVMSaaBsEnUeNd@cluster0.opcwhlf.mongodb.net/tp").then(() => {
     console.log("Connected to Mongoose");
   });
 };
