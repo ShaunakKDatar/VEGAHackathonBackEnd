@@ -5,6 +5,7 @@ const tpoUser = require("./routes/tpoUser");
 const alumniUser = require("./routes/alumniUser");
 const events = require("./routes/events");
 const announcements = require("./routes/announcements");
+const auth = require("./routes/auth");
 
 app.use(express.json());
 
@@ -14,6 +15,7 @@ app.use("/api/tpo", tpoUser);
 app.use("/api/alumni", alumniUser);
 app.use("/api/events", events);
 app.use("/api/announcements", announcements);
+app.use("/api/auth", auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, (err) => {

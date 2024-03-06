@@ -26,14 +26,14 @@ const tpoUserSchema = new mongoose.Schema({
 });
 
 // Method to generate auth token
-tpoUserSchema.methods.getAuthToken = function () {
+tpoUserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
-      id: user._id,
-      username: user.username,
-      isTPO: user.isTPO,
-      email: user.email,
-      college: user.college,
+      id: this._id,
+      username: this.username,
+      isTPO: this.isTPO,
+      email: this.email,
+      college: this.college,
     },
     "secret_ecom"
   );

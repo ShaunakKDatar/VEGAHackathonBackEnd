@@ -26,14 +26,14 @@ const userSchema = new mongoose.Schema({
 });
 
 // Method to generate auth token
-userSchema.methods.getAuthToken = function () {
+userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
-      id: user._id,
-      username: user.username,
-      isAlumni: user.isAlumni,
-      email: user.email,
-      college: user.college,
+      id: this._id,
+      username: this.username,
+      isAlumni: this.isAlumni,
+      email: this.email,
+      college: this.college,
     },
     "secret_ecom"
   );
@@ -54,5 +54,5 @@ function validateUser(user) {
   return schema.validate(user);
 }
 
-exports.User = AlumniUser;
+exports.AlumniUser = AlumniUser;
 exports.validate = validateUser;

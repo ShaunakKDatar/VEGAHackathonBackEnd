@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
+const { TPOUser } = require("../models/tpoUser");
+const { AlumniUser } = require("../models/alumniUser");
 const { StudentUser, validate } = require("../models/studentUser");
 
 // Route to Get Current User
@@ -24,12 +26,29 @@ router.post("/", async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
+    // Check if email exists in TPO and then Alumni
+    let userExists = await TPOUser.findOne({ email: req.body.email });
+    if (userExists)
+      return res.status(400).send("Email already exists in TPO users");
+
+    userExists = await AlumniUser.findOne({ email: req.body.email });
+    if (userExists)
+      return res.status(400).send("Email already exists in Alumni users");
+
     // Check if the user already exists
     let user = await StudentUser.findOne({ email: req.body.email });
     if (user) return res.status(400).send("User already exists");
 
     // Create a new user object
-    user = new StudentUser(_.pick(req.body, ["username", "email", "password"]));
+    user = new StudentUser(
+      _.pick(req.body, [
+        "username",
+        "email",
+        "password",
+        "isStudent",
+        "college",
+      ])
+    );
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
@@ -39,7 +58,7 @@ router.post("/", async (req, res) => {
     await user.save();
 
     // Generate an authentication token
-    const token = user.generateAuthToken();
+    const token = user.getAuthToken();
 
     // Send the token in the response header along with selected user details
     res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));

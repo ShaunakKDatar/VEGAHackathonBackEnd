@@ -29,7 +29,9 @@ router.post("/", async (req, res) => {
     if (user) return res.status(400).send("User already exists");
 
     // Create a new TPO user object
-    user = new TPOUser(_.pick(req.body, ["username", "email", "password"]));
+    user = new TPOUser(
+      _.pick(req.body, ["username", "email", "password", "isTPO", "college"])
+    );
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);

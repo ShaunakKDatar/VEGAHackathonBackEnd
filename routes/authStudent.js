@@ -1,9 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { TPOUser } = require("../models/tpoUser");
-const { AlumniUser } = require("../models/alumniUser");
-const { StudentUser } = require("../models/studentUser");
-// Update this path based on your actual model locations
+const { StudentUser, TPOUser, AlumniUser } = require("../models/user"); // Update this path based on your actual model locations
 const Joi = require("joi");
 const router = express.Router();
 

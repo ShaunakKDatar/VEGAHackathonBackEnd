@@ -25,11 +25,14 @@ router.post("/", async (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     // Check if the user already exists
+    console.log(req.body);
     let user = await AlumniUser.findOne({ email: req.body.email });
     if (user) return res.status(400).send("User already exists");
 
     // Create a new Alumni user object
-    user = new AlumniUser(_.pick(req.body, ["name", "email", "password"]));
+    user = new AlumniUser(
+      _.pick(req.body, ["username", "email", "password", "isAlumni", "college"])
+    );
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
@@ -42,7 +45,7 @@ router.post("/", async (req, res) => {
     const token = user.generateAuthToken();
 
     // Send the token in the response header along with selected user details
-    res.header("X-auth-token", token).send(_.pick(user, ["name", "email"]));
+    res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));
   } catch (error) {
     console.error("Error creating Alumni user:", error);
     res.status(500).send("An unexpected error occurred.");

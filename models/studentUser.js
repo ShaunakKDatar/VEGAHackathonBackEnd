@@ -26,7 +26,7 @@ const studentUserSchema = new mongoose.Schema({
 });
 
 // Method to generate auth token
-studentUserSchema.methods.getAuthToken = function () {
+studentUserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
       id: this._id,
