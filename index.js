@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
-const event = require("./routes/events");
-app.use(express.json());const userRoute = require("./routes/userRoute");
+const userRoute = require("./routes/userRoute");
+const port = process.env.PORT || 3000;
+app.use(express.json());
 require("./startup/db")();
 app.use("/", userRoute);
 app.use("/api/events", event);
