@@ -41,11 +41,11 @@ router.post("/signup", async (req, res) => {
   try {
     // Get the signup data from the request body
     console.log(req.body);
-    const { name, email, password, college, role } = req.body;
+    const { name, email, password, college } = req.body;
     console.log(req.body);
 
     // Create a new user
-    const user = new User({ username: name, email, password, college, role });
+    const user = new User({ username: name, email, password, college });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
