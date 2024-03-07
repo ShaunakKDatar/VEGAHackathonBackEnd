@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 router.get("/", async (req, res) => {
   try {
     const events = await Event.find();
-    res.json({data:events});
+    res.json({ data: events });
   } catch (ex) {
     console.error("Error fetching events:", ex);
     res.status(500).send("An unexpected error occurred.");
@@ -39,8 +39,6 @@ router.post("/", auth, async (req, res) => {
       description: req.body.description,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
       studentUserId: req.body.studentUserId,
     });
 
@@ -63,16 +61,14 @@ router.put("/:id", async (req, res) => {
     if (!event)
       return res.status(404).send("The event with the given ID was not found.");
 
-    // Check if a similar event already exists
-    const existingEvent = await Event.findOne({
-      title: req.body.title,
-      description: req.body.description,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
-      studentUserId: req.body.studentUserId,
-    });
+    // // Check if a similar event already exists
+    // const existingEvent = await Event.findOne({
+    //   title: req.body.title,
+    //   description: req.body.description,
+    //   startDate: req.body.startDate,
+    //   endDate: req.body.endDate,
+    //   studentUserId: req.body.studentUserId,
+    // });
 
     if (existingEvent) {
       return res.status(400).send("A similar event already exists.");
@@ -82,8 +78,6 @@ router.put("/:id", async (req, res) => {
     event.description = req.body.description;
     event.startDate = req.body.startDate;
     event.endDate = req.body.endDate;
-    event.startTime = req.body.startTime;
-    event.endTime = req.body.endTime;
 
     await event.save();
     res.send(event);
