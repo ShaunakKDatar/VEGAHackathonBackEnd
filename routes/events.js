@@ -15,6 +15,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
+    console.log(req.user, "user", req.body);
     
     console.log(req.body);
     if (!req.user.isTPO) {

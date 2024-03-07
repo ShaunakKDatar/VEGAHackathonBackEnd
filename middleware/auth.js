@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
   try {
     const decoded = jwt.verify(token, "secret_ecom");
     req.user = decoded;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (ex) {
     res.status(400).send("Invalid Token");
