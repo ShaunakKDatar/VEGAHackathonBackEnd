@@ -15,31 +15,33 @@ router.get("/", async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
+    
+    console.log(req.body);
     if (!req.user.isTPO) {
       return res.status(403).send("Access Denied. Only TPO can create events.");
     }
 
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // const { error } = validate(req.body);
+    // if (error) return res.status(400).send(error.details[0].message);
 
     // Check if a similar event already exists
     const existingEvent = await Event.findOne({
       title: req.body.title,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      studentUserId: req.body.studentUserId,
+      studentUserId: req.user.id,
     });
 
     if (existingEvent) {
       return res.status(400).send("A similar event already exists.");
     }
-
+console.log("success");
     const event = new Event({
       title: req.body.title,
       description: req.body.description,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      studentUserId: req.body.studentUserId,
+      studentUserId: req.user.id,
     });
 
     await event.save();
