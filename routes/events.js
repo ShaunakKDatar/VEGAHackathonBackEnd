@@ -61,7 +61,7 @@ router.put("/:id", async (req, res) => {
     if (!event)
       return res.status(404).send("The event with the given ID was not found.");
 
-    // // Check if a similar event already exists
+    //  Check if a similar event already exists
     // const existingEvent = await Event.findOne({
     //   title: req.body.title,
     //   description: req.body.description,
@@ -70,9 +70,9 @@ router.put("/:id", async (req, res) => {
     //   studentUserId: req.body.studentUserId,
     // });
 
-    if (existingEvent) {
-      return res.status(400).send("A similar event already exists.");
-    }
+    // if (existingEvent) {
+    //   return res.status(400).send("A similar event already exists.");
+    // }
 
     event.title = req.body.title;
     event.description = req.body.description;
