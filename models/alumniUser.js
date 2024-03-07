@@ -30,10 +30,7 @@ userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
       id: this._id,
-      username: this.username,
       isAlumni: this.isAlumni,
-      email: this.email,
-      college: this.college,
     },
     "secret_ecom"
   );

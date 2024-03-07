@@ -15,7 +15,7 @@ router.get("/me", auth, async (req, res) => {
     res.send(req.user);
   } catch (error) {
     console.error("Error fetching current user:", error);
-    res.send("An unexpected error occurred.");
+    res.status(500).send("An unexpected error occurred.");
   }
 });
 
@@ -35,20 +35,20 @@ router.post("/", async (req, res) => {
   try {
     // Validate the request body
     const { error } = validate(req.body);
-    if (error) return res.send(error.details[0].message);
+    if (error) return res.status(400).send(error.details[0].message);
 
     // Check if email exists in TPO and then Alumni
     let userExists = await TPOUser.findOne({ email: req.body.email });
     if (userExists)
-      return res.json({success:false, message:"Email already exists in TPO users"});
+      return res.status(400).send("Email already exists in TPO users");
 
     userExists = await AlumniUser.findOne({ email: req.body.email });
     if (userExists)
-      return res.json({success:false, message:"Email already exists in Alumni users"});
+      return res.status(400).send("Email already exists in Alumni users");
 
     // Check if the user already exists
     let user = await StudentUser.findOne({ email: req.body.email });
-    if (user) return res.json({success:false, message:"User already exists"});
+    if (user) return res.status(400).send("User already exists");
 
     // Create a new user object
     user = new StudentUser(
@@ -69,15 +69,14 @@ router.post("/", async (req, res) => {
     // Save the new user to the database
     await user.save();
 
-
     // Generate an authentication token
     const token = user.generateAuthToken();
 
     // Send the token in the response header along with selected user details
-    res.header("X-auth-token", token).json({success:true,"data":_.pick(user, ["username", "email"]), "token": token});
+    res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));
   } catch (error) {
     console.error("Error creating user:", error);
-    res.json({success:false,message:"An unexpected error occurred."});
+    res.status(500).send("An unexpected error occurred.");
   }
 });
 

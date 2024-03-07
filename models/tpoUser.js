@@ -30,10 +30,7 @@ tpoUserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
       id: this._id,
-      username: this.username,
       isTPO: this.isTPO,
-      email: this.email,
-      college: this.college,
     },
     "secret_ecom"
   );
