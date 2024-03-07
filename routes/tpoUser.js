@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 
     // Check if the user already exists
     let user = await TPOUser.findOne({ email: req.body.email });
-    if (user) return res.status(400).send("User already exists");
+    if (user) return res.json({success:fail,message:"User already exists"});
 
     // Create a new TPO user object
     user = new TPOUser(
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     const token = user.generateAuthToken();
 
     // Send the token in the response header along with selected user details
-    res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));
+    res.header("X-auth-token", token).json({"success":true,"data":_.pick(user, ["username", "email"]), "token":token});
   } catch (error) {
     console.error("Error creating TPO user:", error);
     res.status(500).send("An unexpected error occurred.");

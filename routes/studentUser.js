@@ -11,8 +11,8 @@ const { StudentUser, validate } = require("../models/studentUser");
 router.get("/me", auth, async (req, res) => {
   try {
     // Find the current user by ID and exclude the password field
-    const user = await StudentUser.findById(req.user._id).select("-password");
-    res.send(user);
+    // const user = await StudentUser.findById(req.user._id).select("-password");
+    res.send(req.user);
   } catch (error) {
     console.error("Error fetching current user:", error);
     res.send("An unexpected error occurred.");

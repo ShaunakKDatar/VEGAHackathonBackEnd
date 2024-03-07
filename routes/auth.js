@@ -9,9 +9,10 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send("Invalid email or password");
+  if (error) return res.send("Invalid email or password");
 
   // Check if the user is a Student
+  console.log("sjsjs", req.body);
   let user = await StudentUser.findOne({ email: req.body.email });
   let userType = "Student";
 
@@ -27,14 +28,14 @@ router.post("/", async (req, res) => {
     userType = "Alumni";
   }
 
-  if (!user) return res.status(400).send("Invalid email or password");
+  if (!user) return res.json({success:false,message:"Invalid email or password"});
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) return res.status(400).send("Invalid email or password");
+  if (!validPassword) return res.json({success:false,message:"Invalid email or password"});
 
   const token = user.generateAuthToken();
 
-  res.send({ token, userType });
+  res.json({success:true, token, userType });
 });
 
 function validate(req) {

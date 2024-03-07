@@ -10,7 +10,7 @@ const {
 router.get("/", async (req, res) => {
   try {
     const announcements = await Announcement.find();
-    res.send(announcements);
+    res.json({data:announcements});
   } catch (error) {
     console.error("Error fetching announcements:", error);
     res.status(500).send("An unexpected error occurred.");

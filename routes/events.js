@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 router.get("/", async (req, res) => {
   try {
     const events = await Event.find();
-    res.send(events);
+    res.json({data:events});
   } catch (ex) {
     console.error("Error fetching events:", ex);
     res.status(500).send("An unexpected error occurred.");
