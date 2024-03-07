@@ -31,8 +31,8 @@ function validateEvent(event) {
   const schema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().max(1000),
-    startTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/), // Matches HH:MM format (24-hour)
-    endTime: Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/),
+    startDate: Joi.date().required(1),
+    endDate: Joi.date(),
     studentUserId: Joi.string().required(), // Matches HH:MM format (24-hour)
   });
 
