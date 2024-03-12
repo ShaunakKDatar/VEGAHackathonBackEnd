@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 require("./startup/db")();
-app.use("/", (res, res) => res.send("Welcome to VEGA Hackathon"))
+// app.use("/", (res, res) => res.send("Welcome to VEGA Hackathon"))
 app.use("/api/student", studentUser);
 app.use("/api/tpo", tpoUser);
 app.use("/api/alumni", alumniUser);
