@@ -10,6 +10,7 @@ const studentUserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    
   },
   isStudent: {
     type: Boolean,

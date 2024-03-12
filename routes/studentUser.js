@@ -11,8 +11,8 @@ const { StudentUser, validate } = require("../models/studentUser");
 router.get("/me", auth, async (req, res) => {
   try {
     // Find the current user by ID and exclude the password field
-    // const user = await StudentUser.findById(req.user._id).select("-password");
-    res.send(req.user);
+    const user = await StudentUser.findById(req.user.id).select("-password");
+    res.json({success:true, data: user});
   } catch (error) {
     console.error("Error fetching current user:", error);
     res.status(500).send("An unexpected error occurred.");
@@ -73,7 +73,7 @@ router.post("/", async (req, res) => {
     const token = user.generateAuthToken();
 
     // Send the token in the response header along with selected user details
-    res.header("X-auth-token", token).send(_.pick(user, ["username", "email"]));
+    res.header("X-auth-token", token).json({"success":true,"data":_.pick(user, ["username", "email"]), "token":token});
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).send("An unexpected error occurred.");

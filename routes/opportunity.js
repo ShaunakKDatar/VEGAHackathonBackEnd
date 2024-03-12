@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 router.get("/", async (req, res) => {
   try {
     const opportunities = await Opportunity.find();
-    res.send(opportunities);
+    res.json({success:true, data:opportunities});
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     res.status(500).send("An unexpected error occurred.");
@@ -28,6 +28,7 @@ router.get("/:id", async (req, res) => {
 
 // Route to create a new opportunity
 router.post("/", auth, async (req, res) => {
+  console.log(req.user, req.body);
   try {
     if (!req.user.isTPO) {
       return res
@@ -35,8 +36,8 @@ router.post("/", auth, async (req, res) => {
         .send("Access Denied. Only TPO can create announcements.");
     }
     // Validate the request body
-    const { error } = validateOpportunity(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // const { error } = validateOpportunity(req.body);
+    // if (error) return res.status(400).send(error.details[0].message);
 
     // Create a new opportunity object
     const opportunity = new Opportunity({
@@ -44,13 +45,16 @@ router.post("/", auth, async (req, res) => {
       duration: req.body.duration,
       source: req.body.source,
       place: req.body.place,
+      company: req.body.company,
       stipend: req.body.stipend,
+      applyBy: req.body.applyBy,
     });
+    console.log("success", opportunity);
 
     // Save the new opportunity to the database
     await opportunity.save();
 
-    res.status(201).send(opportunity);
+    res.json({success:true, data:opportunity});
   } catch (error) {
     console.error("Error creating opportunity:", error);
     res.status(500).send("An unexpected error occurred.");
