@@ -68,6 +68,6 @@ function validateCompany(company) {
   return schema.validate(company);
 }
 
-module.exports = validateCompany;
+module.exports.validateCompany = validateCompany;
 
-module.exports = Company;
+module.exports.Company = Company;

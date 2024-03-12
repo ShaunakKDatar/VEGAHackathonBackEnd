@@ -11,6 +11,7 @@ const auth = require("./routes/auth");
 const interviewQuestion = require("./routes/interviewQuestion");
 const resources = require("./routes/resources");
 const opportunity = require("./routes/opportunity");
+require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());

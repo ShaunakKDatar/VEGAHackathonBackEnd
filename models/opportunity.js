@@ -10,6 +10,10 @@ const opportunitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  company: {
+    type: String,
+    required: true,
+  },
   source: {
     type: String,
     required: true,
@@ -19,8 +23,13 @@ const opportunitySchema = new mongoose.Schema({
     required: true,
   },
   stipend: {
-    type: String,
+    type: Number,
     required: true,
+  },
+  applyBy: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
 });
 
@@ -32,7 +41,7 @@ function validateOpportunity(opportunity) {
     duration: Joi.string().required(),
     source: Joi.string().required(),
     place: Joi.string().required(),
-    stipend: Joi.string().required(),
+    stipend: Joi.number().required(),
   });
 
   return schema.validate(opportunity);
