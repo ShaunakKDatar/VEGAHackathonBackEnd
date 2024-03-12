@@ -12,6 +12,7 @@ router.get("/me", auth, async (req, res) => {
   try {
     // Find the current user by ID and exclude the password field
     const user = await StudentUser.findById(req.user.id).select("-password");
+    if (!user) return res.json({success:false, data: req.user});
     res.json({success:true, data: user});
   } catch (error) {
     console.error("Error fetching current user:", error);

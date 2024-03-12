@@ -9,8 +9,9 @@ const { TPOUser, validate } = require("../models/tpoUser");
 router.get("/me", auth, async (req, res) => {
   try {
     // Find the current TPO user by ID and exclude the password field
-    const user = await TPOUser.findById(req.user._id).select("-password");
-    res.send(user);
+    const user = await TPOUser.findById(req.user.id).select("-password");
+    if (!user){ return res.json({success:false, data: req.user});}
+    res.json({success:true, data: user});
   } catch (error) {
     console.error("Error fetching current TPO user:", error);
     res.status(500).send("An unexpected error occurred.");
