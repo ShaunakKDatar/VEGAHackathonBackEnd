@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Event, validate } = require("../models/events");
 const auth = require("../middleware/auth");
+const c = require("config");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,6 +15,10 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
+  if (!req.user.isTPO) {
+    return res.send("Access Denied. Only TPO can create events.");
+  }
+  console.log(req.user, "user", req.body);
   try {
     console.log(req.user, "user", req.body);
     
@@ -36,7 +41,6 @@ router.post("/", auth, async (req, res) => {
     if (existingEvent) {
       return res.status(400).send("A similar event already exists.");
     }
-console.log("success");
     const event = new Event({
       title: req.body.title,
       description: req.body.description,
@@ -63,19 +67,6 @@ router.put("/:id", async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event)
       return res.status(404).send("The event with the given ID was not found.");
-
-    //  Check if a similar event already exists
-    // const existingEvent = await Event.findOne({
-    //   title: req.body.title,
-    //   description: req.body.description,
-    //   startDate: req.body.startDate,
-    //   endDate: req.body.endDate,
-    //   studentUserId: req.body.studentUserId,
-    // });
-
-    // if (existingEvent) {
-    //   return res.status(400).send("A similar event already exists.");
-    // }
 
     event.title = req.body.title;
     event.description = req.body.description;
